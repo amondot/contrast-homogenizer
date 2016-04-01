@@ -11,9 +11,9 @@
 [general]
 name=Contrast homogenizer
 qgisMinimumVersion=1.8
-qgisMaximumVersion=2.9
+qgisMaximumVersion=2.10.99
 description=Applies the contrast enhancement parameters of the selected layer to all visible layers
-version=2.0
+version=2.1
 author=CS Information Systems
 email=composants_cs-qgis@vulcain.si.c-s.fr
 
