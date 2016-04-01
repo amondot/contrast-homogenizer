@@ -1,39 +1,40 @@
-# This file contains metadata for your plugin. Beginning
-# with version 1.8 this is the preferred way to supply information about a
-# plugin. The current method of embedding metadata in __init__.py will
-# be supported until version 2.0
+# This file contains metadata for your plugin. Since 
+# version 2.0 of QGIS this is the proper way to supply 
+# information about a plugin. The old method of 
+# embedding metadata in __init__.py will 
+# is no longer supported since version 2.0.
 
-# This file should be included when you package your plugin.
+# This file should be included when you package your plugin.# Mandatory items:
 
-# Mandatory items:
-
-
+# Mandatory metadata
 [general]
 name=Contrast homogenizer
-qgisMinimumVersion=1.8
-qgisMaximumVersion=2.10.99
+qgisMinimumVersion=2.0
 description=Applies the contrast enhancement parameters of the selected layer to all visible layers
 version=2.1
 author=CS Information Systems
 email=composants_cs-qgis@vulcain.si.c-s.fr
 
-# end of mandatory metadata
+about=Contrast Homogenizer allows to apply the contrast stretching of the current layer to all visible layers in QGIS. Likely to be useful when you open several adjacent images as QGIS enhances the contrast of each image independently based on their histogram. So the rendering is not homogeneous. This plugin allows to have this homogeneity on display. Released by CS Information Systems. CS is designer and integrator of mission-critical applications and systems in the fields of defence, security, space, aeronautics, energy and industry. For more information, http://www.c-s.fr/.
 
-# Optional items:
+tracker=https://github.com/CS-SI/qgis-contrast-homogenizer/issues
+repository=https://github.com/CS-SI/qgis-contrast-homogenizer
+# End of mandatory metadata
 
-# Uncomment the following line and add your changelog entries:
+# Recommended items:
+
+# Uncomment the following line and add your changelog:
 # changelog=
 
-# tags are comma separated with spaces allowed
+# Tags are comma separated with spaces allowed
 tags=contrast, stretching, histogram
 
 homepage=http://hub.qgis.org/projects/contrasthomogenizer
-tracker=http://hub.qgis.org/projects/contrasthomogenizer/issues
-repository=
+category=Raster
 icon=icon.png
 # experimental flag
 experimental=False
 
-# deprecated flag (applies to the whole plugin, not just a single version
+# deprecated flag (applies to the whole plugin, not just a single version)
 deprecated=False
 

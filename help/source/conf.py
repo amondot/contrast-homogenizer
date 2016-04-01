@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# dynamics documentation build configuration file, created by
+# ContrastHomogenizer documentation build configuration file, created by
 # sphinx-quickstart on Sun Feb 12 17:11:03 2012.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -40,7 +40,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'dynamics'
+project = u'ContrastHomogenizer'
 copyright = u'2013, Alexia Mondot @ C-S'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -74,7 +74,7 @@ exclude_patterns = []
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::).
-#add_module_names = True
+#add_TemplateModuleNames = True
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
@@ -164,7 +164,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'templateclassdoc'
+htmlhelp_basename = 'TemplateClassdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -178,7 +178,7 @@ htmlhelp_basename = 'templateclassdoc'
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'dynamics.tex', u'dynamics Documentation',
+  ('index', 'ContrastHomogenizer.tex', u'ContrastHomogenizer Documentation',
    u'Alexia Mondot @ C-S', 'manual'),
 ]
 
@@ -211,6 +211,6 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'templateclass', u'dynamics Documentation',
+    ('index', 'TemplateClass', u'ContrastHomogenizer Documentation',
      [u'Alexia Mondot @ C-S'], 1)
 ]

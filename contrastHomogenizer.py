@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 /***************************************************************************
-                        Contrast homogenizer
- A QGIS plugin to apply the dynamic of the current layer to all layers
+ ContrastHomogenizer
+                                 A QGIS plugin
+ Applies the contrast enhancement parameters of the selected layer to all visible layers
                               -------------------
         begin                : 2013-03-07
-        copyright            : (C) 2012-2013, CS Information Systems, CSSI
+        git sha              : $Format:%H$
+        copyright            : (C) 2012-2016, CS Information Systems, CSSI
         contributors         : A. Mondot
         email                : alexia.mondot@c-s.fr
  ***************************************************************************/
@@ -23,18 +25,17 @@
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
+from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QObject, SIGNAL, QFileInfo
 from PyQt4.QtGui import QAction, QIcon, QMessageBox
-from PyQt4.QtCore import QObject, SIGNAL, QFileInfo, QSettings, QCoreApplication, QTranslator, qVersion
-
 
 from qgis.core import ( QGis,
                         QgsApplication,
                         QgsContrastEnhancement,
                         )
 
-
 # Initialize Qt resources from file resources.py
-import resources_rc
+import resources
+import os.path
 
 #import logging
 import logging
@@ -56,55 +57,147 @@ class ContrastHomogenizer:
     """
 
     def __init__(self, iface):
-        """
-        Init of the plugin.
-        Automatic function to load the plugin
+        """Constructor.
+
+        :param iface: An interface instance that will be passed to this class
+            which provides the hook by which you can manipulate the QGIS
+            application at run time.
+        :type iface: QgsInterface
         """
         # Save reference to the QGIS interface
         self.iface = iface
         self.canvas = self.iface.mapCanvas()
         # initialize plugin directory
-        self.plugin_dir = QFileInfo(QgsApplication.qgisUserDbFilePath()).path() + "/python/plugins/contrastHomogenizer"
+        self.plugin_dir = os.path.dirname(__file__)
         # initialize locale
-        localePath = ""
-        
-        if QGis.QGIS_VERSION_INT <= 10900 :
-            locale = QSettings().value("locale/userLocale").toString()[0:2]
-    
-        else :
-            locale = QSettings().value("locale/userLocale")[0:2]
-    
-        if QFileInfo(self.plugin_dir).exists():
-            localePath = self.plugin_dir + "/i18n/contrastHomogenizer_" + locale + ".qm"
+        locale = QSettings().value('locale/userLocale')[0:2]
+        locale_path = os.path.join(
+            self.plugin_dir,
+            'i18n',
+            'ContrastHomogenizer_{}.qm'.format(locale))
 
-        if QFileInfo(localePath).exists():
+        if os.path.exists(locale_path):
             self.translator = QTranslator()
-            self.translator.load(localePath)
+            self.translator.load(locale_path)
 
             if qVersion() > '4.3.3':
                 QCoreApplication.installTranslator(self.translator)
 
+        # Declare instance attributes
+        self.actions = []
+        self.menu = self.tr(u'&Contrast homogenizer')
+        # TODO: We are going to let the user set this up in a future iteration
+        self.toolbar = self.iface.addToolBar(u'ContrastHomogenizer')
+        self.toolbar.setObjectName(u'ContrastHomogenizer')
+
+    # noinspection PyMethodMayBeStatic
+    def tr(self, message):
+        """Get the translation for a string using Qt translation API.
+        We implement this ourselves since we do not inherit QObject.
+
+        :param message: String for translation.
+        :type message: str, QString
+
+        :returns: Translated version of message.
+        :rtype: QString
+        """
+        # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
+        return QCoreApplication.translate('ContrastHomogenizer', message)
+
+
+    def add_action(
+        self,
+        icon_path,
+        text,
+        callback,
+        enabled_flag=True,
+        add_to_menu=True,
+        add_to_toolbar=True,
+        status_tip=None,
+        whats_this=None,
+        parent=None):
+        """Add a toolbar icon to the toolbar.
+
+        :param icon_path: Path to the icon for this action. Can be a resource
+            path (e.g. ':/plugins/foo/bar.png') or a normal file system path.
+        :type icon_path: str
+
+        :param text: Text that should be shown in menu items for this action.
+        :type text: str
+
+        :param callback: Function to be called when the action is triggered.
+        :type callback: function
+
+        :param enabled_flag: A flag indicating if the action should be enabled
+            by default. Defaults to True.
+        :type enabled_flag: bool
+
+        :param add_to_menu: Flag indicating whether the action should also
+            be added to the menu. Defaults to True.
+        :type add_to_menu: bool
+
+        :param add_to_toolbar: Flag indicating whether the action should also
+            be added to the toolbar. Defaults to True.
+        :type add_to_toolbar: bool
+
+        :param status_tip: Optional text to show in a popup when mouse pointer
+            hovers over the action.
+        :type status_tip: str
+
+        :param parent: Parent widget for the new action. Defaults None.
+        :type parent: QWidget
+
+        :param whats_this: Optional text to show in the status bar when the
+            mouse pointer hovers over the action.
+
+        :returns: The action that was created. Note that the action is also
+            added to self.actions list.
+        :rtype: QAction
+        """
+
+        icon = QIcon(icon_path)
+        action = QAction(icon, text, parent)
+        action.triggered.connect(callback)
+        action.setEnabled(enabled_flag)
+
+        if status_tip is not None:
+            action.setStatusTip(status_tip)
+
+        if whats_this is not None:
+            action.setWhatsThis(whats_this)
+
+        if add_to_toolbar:
+            self.toolbar.addAction(action)
+
+        if add_to_menu:
+            self.iface.addPluginToRasterMenu(
+                self.menu,
+                action)
+
+        self.actions.append(action)
+
+        return action
 
     def initGui(self):
-        """
-        Creates action that will start plugin configuration and connects the run method
-        """
-        # 
-        self.action = QAction(
-            QIcon(":/plugins/contrastHomogenizer/icon.png"),
-            u"Contrast Homogenizer", self.iface.mainWindow())
-        # connect the action to the run method
-        QObject.connect(self.action, SIGNAL("triggered()"), self.run)
+        """Create the menu entries and toolbar icons inside the QGIS GUI."""
 
-        # Add toolbar button and menu item
-        self.iface.addToolBarIcon(self.action)
-        self.iface.addPluginToMenu(u"&Same dynamic to all layers", self.action)
+        icon_path = ':/plugins/contrastHomogenizer/icon.png'
+        self.add_action(
+            icon_path,
+            text=self.tr(u'Contrast Homogenizer'),
+            callback=self.run,
+            parent=self.iface.mainWindow())
 
 
     def unload(self):
-        # Remove the plugin menu item and icon
-        self.iface.removePluginMenu(u"&Same dynamic to all layers", self.action)
-        self.iface.removeToolBarIcon(self.action)
+        """Removes the plugin menu item and icon from QGIS GUI."""
+        for action in self.actions:
+            self.iface.removePluginRasterMenu(
+                self.tr(u'&Contrast homogenizer'),
+                action)
+            self.iface.removeToolBarIcon(action)
+        # remove the toolbar
+        del self.toolbar
 
 
     def run(self):
@@ -304,3 +397,4 @@ class ContrastHomogenizer:
 
                         layerFromList.setCacheImage(None)
                         layerFromList.triggerRepaint()
+
