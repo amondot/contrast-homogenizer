@@ -5,8 +5,9 @@ Contrast Homogenizer allows to apply the contrast stretching of the current laye
 # Copyright & License
 
 Copyright 2012-2016, CS Systèmes d'Information  
-Released by CS Information Systems. CS is designer and integrator of mission-critical applications and systems in the fields of defence, security, space, aeronautics, energy and industry.
+CS is designer and integrator of mission-critical applications and systems in the fields of defence, security, space, aeronautics, energy and industry.
 For more information, [http://www.c-s.fr/](http://www.c-s.fr/).
 
+Copyright 2019, Alexia Mondot
 
 Contrast Homogenizer is released under the [GNU General Public License](COPYING) as published by the Free Software Foundation, either version 2 of the License, or (at your option) any later version.
