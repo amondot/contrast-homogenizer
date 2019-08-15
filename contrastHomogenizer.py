@@ -29,16 +29,17 @@ from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, qVersion,
 from qgis.PyQt.QtGui import QIcon
 from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
 
-from qgis.core import ( QgsApplication,
-                        QgsContrastEnhancement,
-                        )
+from qgis.core import (QgsApplication,
+                       QgsContrastEnhancement,
+                       )
 
 # Initialize Qt resources from file resources.py
 from .resources import *
 import os.path
 
-#import logging
+# import logging
 import logging
+
 # create logger
 logger = logging.getLogger('contrastHomogenizer')
 logger.setLevel(logging.INFO)
@@ -47,13 +48,13 @@ logger.setLevel(logging.INFO)
 class ContrastHomogenizer:
     """
     This class allows to apply the dynamic of the current layer to all other layers
-    
+
     Keyword arguments:
         QGIS:
             self.iface   -- qgis interface
             self.canvas  -- qgis map canvas
             self.plugin_dir -- plugin directory
-            
+
     """
 
     def __init__(self, iface):
@@ -104,18 +105,17 @@ class ContrastHomogenizer:
         # noinspection PyTypeChecker,PyArgumentList,PyCallByClass
         return QCoreApplication.translate('ContrastHomogenizer', message)
 
-
     def add_action(
-        self,
-        icon_path,
-        text,
-        callback,
-        enabled_flag=True,
-        add_to_menu=True,
-        add_to_toolbar=True,
-        status_tip=None,
-        whats_this=None,
-        parent=None):
+            self,
+            icon_path,
+            text,
+            callback,
+            enabled_flag=True,
+            add_to_menu=True,
+            add_to_toolbar=True,
+            status_tip=None,
+            whats_this=None,
+            parent=None):
         """Add a toolbar icon to the toolbar.
 
         :param icon_path: Path to the icon for this action. Can be a resource
@@ -188,7 +188,6 @@ class ContrastHomogenizer:
             callback=self.run,
             parent=self.iface.mainWindow())
 
-
     def unload(self):
         """Removes the plugin menu item and icon from QGIS GUI."""
         for action in self.actions:
@@ -199,7 +198,6 @@ class ContrastHomogenizer:
         # remove the toolbar
         del self.toolbar
 
-
     def run(self):
         """
         This method applies the dynamic.
@@ -209,51 +207,50 @@ class ContrastHomogenizer:
             layerCE          --    qgis.core.QgsContrastEnhancement
             layerFromListCE  --    qgis.core.QgsRasterLayer
         """
-        #take the current layer
-        layer = self.canvas.currentLayer() #QgsMapCanvas
-        #take the list of visible layers
+        # take the current layer
+        layer = self.canvas.currentLayer()  # QgsMapCanvas
+        # take the list of visible layers
         listCanvasLayer = self.canvas.layers()
         
         # if a layer is selected,
-        if not layer == None :   
-            
+        if not layer == None:
+
             layername = layer.name()
-            logger.info( layername )
+            logger.info(layername)
 
             # type of layer : raster, vector, other
             typeOfLayer = layer.type()
-            logger.debug( "typeOfLayer {}".format(str( typeOfLayer )) )
-            
-            #take the layer renderer to get the min and max 
+            logger.debug("typeOfLayer {}".format(str(typeOfLayer)))
+
+            # take the layer renderer to get the min and max
             layerRenderer = layer.renderer()
-            
+
             # the layer has to be a raster layer
-            if typeOfLayer == 1 :
+            if typeOfLayer == 1:
                 # layerRenderer
                 # <qgis.core.QgsSingleBandGrayRenderer object at 0x514caf0>
-                logger.debug( "raster type : " + str( layer.rasterType()) )
-                logger.info( layerRenderer )
+                logger.debug("raster type : " + str(layer.rasterType()))
+                logger.info(layerRenderer)
 
                 # gray band
-                if layer.rasterType() == 0 :
+                if layer.rasterType() == 0:
                     self.dynamicsSingleBand(layerRenderer, listCanvasLayer)
-                    
-                #multiband
-                elif layer.rasterType() == 2 :
+
+                # multiband
+                elif layer.rasterType() == 2:
                     self.dynamicsMultiBand(layerRenderer, listCanvasLayer)
-                 
-                # refreshing                 
-                self.canvas.refresh()    
+
+                # refreshing
+                self.canvas.refresh()
             # the selected layer is not a raster layer
-            else :
+            else:
                 QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer", "Please select a raster layer")
                 return False
-        #no layer selected
-        else :
-                QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer", "Please select a raster layer")
-                return False
-        
-        
+        # no layer selected
+        else:
+            QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer", "Please select a raster layer")
+            return False
+
     def dynamicsSingleBand(self, layerRenderer, listCanvasLayer):
         """
         Applies the dynamic of the selected layer to all single band layers
@@ -263,36 +260,34 @@ class ContrastHomogenizer:
         """
         # take the contrast enhancement of the layer threw the renderer
         layerCE = layerRenderer.contrastEnhancement()
-        logger.info( layerCE )
-#       layerCE
-#       <qgis.core.QgsContrastEnhancement object at 0x514c9e0>
-        
+        logger.info(layerCE)
+        #       layerCE
+        #       <qgis.core.QgsContrastEnhancement object at 0x514c9e0>
+
         # get computed min and max
         maxCurrent = layerCE.maximumValue()
         minCurrent = layerCE.minimumValue()
-        
-        logger.info( maxCurrent )
-        logger.info( minCurrent )
 
-        # for each layer 
+        logger.info(maxCurrent)
+        logger.info(minCurrent)
+
+        # for each layer
         for layerFromList in listCanvasLayer:
             # which is raster
-            if layerFromList.type() == 1 :
+            if layerFromList.type() == 1:
                 # gray band
-                if layerFromList.rasterType() == 0 :
-                    #take the layer renderer to set the min and max
+                if layerFromList.rasterType() == 0:
+                    # take the layer renderer to set the min and max
                     rendererFromList = layerFromList.renderer()
-                    logger.info( rendererFromList )
-                    
+                    logger.info(rendererFromList)
+
                     layerFromListCE = rendererFromList.contrastEnhancement()
-                    logger.info( layerFromListCE )
-                    
+                    logger.info(layerFromListCE)
+
                     layerFromListCE.setMinimumValue(minCurrent)
                     layerFromListCE.setMaximumValue(maxCurrent)
                     layerFromList.setCacheImage(None)
                     layerFromList.triggerRepaint()
-
-
 
     def dynamicsMultiBand(self, layerRenderer, listCanvasLayer):
         """
@@ -301,63 +296,62 @@ class ContrastHomogenizer:
         :param listCanvasLayer:
         :return:
         """
-#       layerRenderer
-#       <qgis.core.QgsMultiBandColorRenderer object at 0x514c9e0>
+        #       layerRenderer
+        #       <qgis.core.QgsMultiBandColorRenderer object at 0x514c9e0>
         layerCERed = layerRenderer.redContrastEnhancement()
         layerCEGreen = layerRenderer.greenContrastEnhancement()
         layerCEBlue = layerRenderer.blueContrastEnhancement()
 
-
         if layerCERed and layerCEGreen and layerCEBlue:
-            #set stretch to min max
+            # set stretch to min max
             layerCERed.setContrastEnhancementAlgorithm(1)
             layerCEGreen.setContrastEnhancementAlgorithm(1)
             layerCEBlue.setContrastEnhancementAlgorithm(1)
 
-            logger.debug( "red :" + str( layerCERed.contrastEnhancementAlgorithm() ))
-            logger.debug( "green:" + str( layerCEGreen.contrastEnhancementAlgorithm() ))
-            logger.debug( "blue :" + str( layerCEBlue.contrastEnhancementAlgorithm() ))
+            logger.debug("red :" + str(layerCERed.contrastEnhancementAlgorithm()))
+            logger.debug("green:" + str(layerCEGreen.contrastEnhancementAlgorithm()))
+            logger.debug("blue :" + str(layerCEBlue.contrastEnhancementAlgorithm()))
 
-            #get the min and max of RGB bands
+            # get the min and max of RGB bands
             maxCurrentRed = layerCERed.maximumValue()
             minCurrentRed = layerCERed.minimumValue()
 
-            logger.debug( "min red:" + str( minCurrentRed ) + "max red:" + str( maxCurrentRed ) )
+            logger.debug("min red:" + str(minCurrentRed) + "max red:" + str(maxCurrentRed))
 
             maxCurrentGreen = layerCEGreen.maximumValue()
             minCurrentGreen = layerCEGreen.minimumValue()
 
-            logger.debug( "min green:" + str( minCurrentGreen ) + "max green:" + str( maxCurrentGreen ) )
+            logger.debug("min green:" + str(minCurrentGreen) + "max green:" + str(maxCurrentGreen))
 
             maxCurrentBlue = layerCEBlue.maximumValue()
             minCurrentBlue = layerCEBlue.minimumValue()
 
-            logger.debug( "min blue:" + str( minCurrentBlue ) + "max blue:" + str( maxCurrentBlue ) )
+            logger.debug("min blue:" + str(minCurrentBlue) + "max blue:" + str(maxCurrentBlue))
 
             # for each layer
-            logger.debug( "there are" + str( len(listCanvasLayer) ) + " layers in the canvas" )
+            logger.debug("there are" + str(len(listCanvasLayer)) + " layers in the canvas")
             for layerFromList in listCanvasLayer:
-                logger.debug( "layer from list name :" + str( layerFromList.name() ) )
+                logger.debug("layer from list name :" + str(layerFromList.name()))
 
                 # which is raster
-                if layerFromList.type() == 1 :
-                    logger.debug( "layer from list is a raster file" )
+                if layerFromList.type() == 1:
+                    logger.debug("layer from list is a raster file")
 
                     # which is multi
-                    if layerFromList.rasterType() == 2 :
-                        logger.debug( "multiband file" )
+                    if layerFromList.rasterType() == 2:
+                        logger.debug("multiband file")
 
                         dataProvider = layerFromList.dataProvider()
-                        #take the layer renderer to set the min and max
+                        # take the layer renderer to set the min and max
                         rendererFromList = layerFromList.renderer()
-                        #<qgis.core.QgsMultiBandColorRenderer object at 0x3f8a8d0>
-                        logger.debug( "renderer from list" + str( rendererFromList ) )
+                        # <qgis.core.QgsMultiBandColorRenderer object at 0x3f8a8d0>
+                        logger.debug("renderer from list" + str(rendererFromList))
 
-                        logger.debug( "green band" + str( rendererFromList.greenBand() ) )
-                        logger.debug( "blue band" + str( rendererFromList.blueBand() ) )
-                        logger.debug( "red band" + str( rendererFromList.redBand() ) )
+                        logger.debug("green band" + str(rendererFromList.greenBand()))
+                        logger.debug("blue band" + str(rendererFromList.blueBand()))
+                        logger.debug("red band" + str(rendererFromList.redBand()))
 
-                        logger.info( rendererFromList )
+                        logger.info(rendererFromList)
 
                         redEnhancement = None
                         redEnhancement = QgsContrastEnhancement(dataProvider.dataType(1))
@@ -366,7 +360,7 @@ class ContrastHomogenizer:
                             redEnhancement.setMinimumValue(minCurrentRed)
                             redEnhancement.setMaximumValue(maxCurrentRed)
                             redEnhancement.setContrastEnhancementAlgorithm(1)
-                            rendererFromList.setRedContrastEnhancement( redEnhancement )
+                            rendererFromList.setRedContrastEnhancement(redEnhancement)
 
                         greenEnhancement = None
                         greenEnhancement = QgsContrastEnhancement(dataProvider.dataType(2))
@@ -375,7 +369,7 @@ class ContrastHomogenizer:
                             greenEnhancement.setMinimumValue(minCurrentGreen)
                             greenEnhancement.setMaximumValue(maxCurrentGreen)
                             greenEnhancement.setContrastEnhancementAlgorithm(1)
-                            rendererFromList.setGreenContrastEnhancement( greenEnhancement )
+                            rendererFromList.setGreenContrastEnhancement(greenEnhancement)
 
                         blueEnhancement = None
                         blueEnhancement = QgsContrastEnhancement(dataProvider.dataType(3))
@@ -384,8 +378,7 @@ class ContrastHomogenizer:
                             blueEnhancement.setMinimumValue(minCurrentBlue)
                             blueEnhancement.setMaximumValue(maxCurrentBlue)
                             blueEnhancement.setContrastEnhancementAlgorithm(1)
-                            rendererFromList.setBlueContrastEnhancement( blueEnhancement )
+                            rendererFromList.setBlueContrastEnhancement(blueEnhancement)
 
                         layerFromList.setCacheImage(None)
                         layerFromList.triggerRepaint()
-
