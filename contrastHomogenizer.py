@@ -360,38 +360,29 @@ class ContrastHomogenizer:
                         logger.info( rendererFromList )
 
                         redEnhancement = None
-                        if QGis.QGIS_VERSION_INT == 10800:  # for QGIS = 1.8
-                            redEnhancement = QgsContrastEnhancement(QgsContrastEnhancement.QgsRasterDataType(dataProvider.dataType(0)))
-                        elif QGis.QGIS_VERSION_INT >= 10900:  # for QGIS = 1.9
-                            redEnhancement = QgsContrastEnhancement(dataProvider.dataType(1))
+                        redEnhancement = QgsContrastEnhancement(dataProvider.dataType(1))
 
-                        if redEnhancement :
-                            redEnhancement.setMinimumValue( minCurrentRed )
-                            redEnhancement.setMaximumValue( maxCurrentRed )
+                        if redEnhancement:
+                            redEnhancement.setMinimumValue(minCurrentRed)
+                            redEnhancement.setMaximumValue(maxCurrentRed)
                             redEnhancement.setContrastEnhancementAlgorithm(1)
                             rendererFromList.setRedContrastEnhancement( redEnhancement )
 
                         greenEnhancement = None
-                        if QGis.QGIS_VERSION_INT == 10800:  # for QGIS = 1.8
-                            greenEnhancement = QgsContrastEnhancement(QgsContrastEnhancement.QgsRasterDataType(dataProvider.dataType(1)))
-                        elif QGis.QGIS_VERSION_INT >= 10900:  # for QGIS = 1.9
-                            greenEnhancement = QgsContrastEnhancement(dataProvider.dataType(2))
+                        greenEnhancement = QgsContrastEnhancement(dataProvider.dataType(2))
 
-                        if greenEnhancement :
-                            greenEnhancement.setMinimumValue( minCurrentGreen )
-                            greenEnhancement.setMaximumValue( maxCurrentGreen )
+                        if greenEnhancement:
+                            greenEnhancement.setMinimumValue(minCurrentGreen)
+                            greenEnhancement.setMaximumValue(maxCurrentGreen)
                             greenEnhancement.setContrastEnhancementAlgorithm(1)
                             rendererFromList.setGreenContrastEnhancement( greenEnhancement )
 
                         blueEnhancement = None
-                        if QGis.QGIS_VERSION_INT == 10800:  # for QGIS = 1.8
-                            blueEnhancement = QgsContrastEnhancement(QgsContrastEnhancement.QgsRasterDataType(dataProvider.dataType(2)))
-                        elif QGis.QGIS_VERSION_INT >= 10900:  # for QGIS = 1.9
-                            blueEnhancement = QgsContrastEnhancement(dataProvider.dataType(3))
+                        blueEnhancement = QgsContrastEnhancement(dataProvider.dataType(3))
 
-                        if blueEnhancement :
-                            blueEnhancement.setMinimumValue( minCurrentBlue )
-                            blueEnhancement.setMaximumValue( maxCurrentBlue )
+                        if blueEnhancement:
+                            blueEnhancement.setMinimumValue(minCurrentBlue)
+                            blueEnhancement.setMaximumValue(maxCurrentBlue)
                             blueEnhancement.setContrastEnhancementAlgorithm(1)
                             rendererFromList.setBlueContrastEnhancement( blueEnhancement )
 
