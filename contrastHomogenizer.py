@@ -31,7 +31,7 @@ from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
 
 from qgis.core import (QgsApplication,
                        QgsContrastEnhancement,
-                       )
+                       QgsMapLayerType)
 
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -226,7 +226,7 @@ class ContrastHomogenizer:
             layerRenderer = layer.renderer()
 
             # the layer has to be a raster layer
-            if typeOfLayer == 1:
+            if typeOfLayer == QgsMapLayerType.RasterLayer:
                 # layerRenderer
                 # <qgis.core.QgsSingleBandGrayRenderer object at 0x514caf0>
                 logger.debug("raster type : " + str(layer.rasterType()))
@@ -274,7 +274,7 @@ class ContrastHomogenizer:
         # for each layer
         for layerFromList in listCanvasLayer:
             # which is raster
-            if layerFromList.type() == 1:
+            if layerFromList.type() == QgsMapLayerType.RasterLayer:
                 # gray band
                 if layerFromList.rasterType() == 0:
                     # take the layer renderer to set the min and max
@@ -286,7 +286,6 @@ class ContrastHomogenizer:
 
                     layerFromListCE.setMinimumValue(minCurrent)
                     layerFromListCE.setMaximumValue(maxCurrent)
-                    layerFromList.setCacheImage(None)
                     layerFromList.triggerRepaint()
 
     def dynamicsMultiBand(self, layerRenderer, listCanvasLayer):
@@ -380,5 +379,4 @@ class ContrastHomogenizer:
                             blueEnhancement.setContrastEnhancementAlgorithm(1)
                             rendererFromList.setBlueContrastEnhancement(blueEnhancement)
 
-                        layerFromList.setCacheImage(None)
                         layerFromList.triggerRepaint()
