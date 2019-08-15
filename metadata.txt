@@ -8,7 +8,7 @@
 
 # Mandatory metadata
 [general]
-name=Contrast homogenizer
+name=Contrast homogenizer 3
 qgisMinimumVersion=3.0
 description=Applies the contrast enhancement parameters of the selected layer to all visible layers
 version=2.1
