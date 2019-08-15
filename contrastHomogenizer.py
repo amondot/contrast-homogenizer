@@ -245,11 +245,13 @@ class ContrastHomogenizer:
                 self.canvas.refresh()
             # the selected layer is not a raster layer
             else:
-                QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer", "Please select a raster layer")
+                QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer",
+                                    "No raster selected: Please select a raster layer")
                 return False
         # no layer selected
         else:
-            QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer", "Please select a raster layer")
+            QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer",
+                                "No layer selected: Please select a raster layer")
             return False
 
     def dynamics_single_band(self, layer_renderer, list_canvas_layer):
