@@ -25,16 +25,16 @@
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
-from PyQt4.QtCore import QSettings, QTranslator, qVersion, QCoreApplication, QObject, SIGNAL, QFileInfo
-from PyQt4.QtGui import QAction, QIcon, QMessageBox
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, qVersion, QObject, QFileInfo
+from qgis.PyQt.QtGui import QIcon
+from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
 
-from qgis.core import ( QGis,
-                        QgsApplication,
+from qgis.core import ( QgsApplication,
                         QgsContrastEnhancement,
                         )
 
 # Initialize Qt resources from file resources.py
-import resources
+from .resources import *
 import os.path
 
 #import logging
