@@ -11,7 +11,7 @@
 name=Contrast homogenizer 3
 qgisMinimumVersion=3.0
 description=Applies the contrast enhancement parameters of the selected layer to all visible layers
-version=3.0
+version=3.1
 author=Alexia Mondot
 email=contact@mondot.fr
 
