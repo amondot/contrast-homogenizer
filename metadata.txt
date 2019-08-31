@@ -12,8 +12,8 @@ name=Contrast homogenizer 3
 qgisMinimumVersion=3.0
 description=Applies the contrast enhancement parameters of the selected layer to all visible layers
 version=3.0
-author=CS Information Systems, Alexia Mondot
-email=composants_cs-qgis@vulcain.si.c-s.fr, contact@mondot.fr
+author=Alexia Mondot
+email=contact@mondot.fr
 
 about=Contrast Homogenizer allows to apply the contrast stretching of the current layer to all visible layers in QGIS. Likely to be useful when you open several adjacent images as QGIS enhances the contrast of each image independently based on their histogram. So the rendering is not homogeneous. This plugin allows to have this homogeneity on display. See README.md for more information.
 

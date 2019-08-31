@@ -8,9 +8,12 @@
 
 """
 
-__author__ = 'composants_cs-qgis@vulcain.si.c-s.fr'
+__author__ = 'Alexia Mondot <contact@mondot.fr>'
 __date__ = '2016-04-01'
-__copyright__ = 'Copyright 2016, CS Information Systems'
+__copyright__ = (
+    '(C) 2012-2016, CS Systèmes d\'Information (CS SI)'
+    '(C) 2019, Alexia Mondot'
+)
 
 import unittest
 

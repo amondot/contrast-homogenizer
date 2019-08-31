@@ -6,9 +6,9 @@
  Applies the contrast enhancement parameters of the selected layer to all visible layers
                              -------------------
         begin                : 2013-03-07
-        copyright            : (C) 2012-2013, CS Information Systems, CSSI
-        contributors         : Alexia Mondot
-        email                : alexia.mondot@c-s.fr
+        copyright            : (C) 2012-2016, CS Systèmes d'Information (CS SI)
+                               (C) 2019, Alexia Mondot
+        contact              : Alexia Mondot <contact@mondot.fr>
         git sha              : $Format:%H$
  ***************************************************************************/
 

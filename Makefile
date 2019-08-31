@@ -5,8 +5,9 @@
 #							 -------------------
 #		begin				: 2016-04-01
 #		git sha				: $Format:%H$
-#		copyright			: (C) 2016 by CS Information Systems
-#		email				: composants_cs-qgis@vulcain.si.c-s.fr
+#		copyright			: (C) 2012-2016, CS Systèmes d'Information (CS SI)
+#		         			  (C) 2019, Alexia Mondot
+#		email				: Alexia Mondot <contact@mondot.fr>
 # ***************************************************************************/
 #
 #/***************************************************************************

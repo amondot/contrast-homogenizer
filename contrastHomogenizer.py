@@ -7,9 +7,9 @@
                               -------------------
         begin                : 2013-03-07
         git sha              : $Format:%H$
-        copyright            : (C) 2012-2016, CS Information Systems, CSSI
-        contributors         : A. Mondot
-        email                : alexia.mondot@c-s.fr
+        copyright            : (C) 2012-2016, CS Systèmes d'Information (CS SI)
+                               (C) 2019, Alexia Mondot
+        contact              : Alexia Mondot <contact@mondot.fr>
  ***************************************************************************/
 
 /***************************************************************************
