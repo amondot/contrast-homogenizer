@@ -25,13 +25,19 @@
  ***************************************************************************/
 """
 # Import the PyQt and QGIS libraries
-from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, qVersion, QObject, QFileInfo
+from qgis.PyQt.QtCore import QSettings, QTranslator, QCoreApplication, qVersion
 from qgis.PyQt.QtGui import QIcon
-from qgis.PyQt.QtWidgets import QAction, QFileDialog, QMessageBox
+from qgis.PyQt.QtWidgets import QAction, QMessageBox
 
-from qgis.core import (QgsApplication,
-                       QgsContrastEnhancement,
-                       QgsMapLayerType)
+from qgis.core import (QgsContrastEnhancement,
+                       Qgis)
+
+try :
+    from qgis.core import QgsMapLayerType
+    QGIS_LAYER_TYPE = QgsMapLayerType.RasterLayer
+except ImportError:   # QGIS < 3.8
+    QGIS_LAYER_TYPE = 1
+
 
 # Initialize Qt resources from file resources.py
 from .resources import *
@@ -227,27 +233,27 @@ class ContrastHomogenizer:
             layer_renderer = layer.renderer()
 
             # the layer has to be a raster layer
-            if type_of_layer == QgsMapLayerType.RasterLayer:
-                # layerRenderer
-                # <qgis.core.QgsSingleBandGrayRenderer object at 0x514caf0>
-                logger.debug("raster type : %s", layer.rasterType())
-                logger.info(layer_renderer)
+            if type_of_layer != QGIS_LAYER_TYPE:
+                self.iface.messageBar().pushMessage("Contrast Homogenizer",
+                                                    "No raster selected: Please select a raster layer",
+                                                    level=Qgis.Warning)
+                return
 
-                # gray band
-                if layer.rasterType() == 0:
-                    self.dynamics_single_band(layer_renderer, list_canvas_layer)
+            # layerRenderer
+            # <qgis.core.QgsSingleBandGrayRenderer object at 0x514caf0>
+            logger.debug("raster type : %s", layer.rasterType())
+            logger.info(layer_renderer)
 
-                # multiband
-                elif layer.rasterType() == 2:
-                    self.dynamics_multi_band(layer_renderer, list_canvas_layer)
+            # gray band
+            if layer.rasterType() == 0:
+                self.dynamics_single_band(layer_renderer, list_canvas_layer)
 
-                # refreshing
-                self.canvas.refresh()
-            # the selected layer is not a raster layer
-            else:
-                QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer",
-                                    "No raster selected: Please select a raster layer")
-                return False
+            # multiband
+            elif layer.rasterType() == 2:
+                self.dynamics_multi_band(layer_renderer, list_canvas_layer)
+
+            # refreshing
+            self.canvas.refresh()
         # no layer selected
         else:
             QMessageBox.warning(self.iface.mainWindow(), "Contrast Homogenizer",
@@ -277,7 +283,7 @@ class ContrastHomogenizer:
         # for each layer
         for layer_from_list in list_canvas_layer:
             # which is raster
-            if layer_from_list.type() == QgsMapLayerType.RasterLayer:
+            if layer_from_list.type() == QGIS_LAYER_TYPE:
                 # gray band
                 if layer_from_list.rasterType() == 0:
                     # take the layer renderer to set the min and max
@@ -336,7 +342,7 @@ class ContrastHomogenizer:
                 logger.debug("layer from list name :" + str(layer_from_list.name()))
 
                 # which is raster
-                if layer_from_list.type() == QgsMapLayerType.RasterLayer:
+                if layer_from_list.type() ==QGIS_LAYER_TYPE:
                     logger.debug("layer from list is a raster file")
 
                     # which is multi
